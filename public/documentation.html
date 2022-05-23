@@ -23,5 +23,104 @@
       own account to create their personal list of 'favorites' and 'to-watch'
       movies.
     </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Request</th>
+          <th>request body</th>
+          <th>HTTP method</th>
+          <th>URL</th>
+          <th>Response</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Get list of movies</td>
+          <td>none</td>
+          <td>GET</td>
+          <td>/movies</td>
+          <td>JSON with data about all movies</td>
+        </tr>
+
+        <tr>
+          <td>Get data about single movie by title</td>
+          <td>none</td>
+          <td>GET</td>
+          <td>/movies/[title]</td>
+          <td>
+            JSON object with data about single movie (description, genre,
+            director, imageURL)
+          </td>
+        </tr>
+
+        <tr>
+          <td>Get data about single genre by name</td>
+          <td>none</td>
+          <td>GET</td>
+          <td>/genres/[name]</td>
+          <td>Text with description about genre by name</td>
+        </tr>
+
+        <tr>
+          <td>Get data about a director by name</td>
+          <td>none</td>
+          <td>GET</td>
+          <td>/directors/[name]</td>
+          <td>
+            JSON object with data about a director (bio, yearOfBirth,
+            yearOfDeath)
+          </td>
+        </tr>
+
+        <tr>
+          <td>Register a new user</td>
+          <td>JSON object: { "username": "aleargento", "email": "mynombre@domain.com" } </td>
+          <td>POST</td>
+          <td>/users</td>
+          <td>Text confirming registration</td>
+        </tr>
+
+        <tr>
+          <td>Update information of single user</td>
+          <td>JSON object updated: { "username": "new_name", "email": "new_email@domain.com" }</td>
+          <td>PUT</td>
+          <td>/users/[username]</td>
+          <td>Text message with data about single user (username)</td>
+        </tr>
+
+        <tr>
+          <td>Add movie to user's list of favorites movies</td>
+          <td>JSON object: {
+            "title": "Movie title",
+            "description": "description info",
+            "genre": "Crime",
+            "imageURL": "",
+            "year": "1999",
+            "director": "Director's name"
+        }</td>
+          <td>POST</td>
+          <td>/users/[username]/favorites</td>
+          <td>
+            Text message confirming movie was added 
+          </td>
+        
+          <tr>
+            <td>Delete movie from user's list of favorites</td>
+            <td>none</td>
+            <td>DELETE</td>
+            <td>/users/[username]/favorites/[title]</td>
+            <td>Text message confirming movie was removed</td>
+          </tr>
+
+          <tr>
+            <td>De-register (delete) user by email</td>
+            <td>none</td>
+            <td>DELETE</td>
+            <td>/users/[username]</td>
+            <td>Text message confirming user email was removed</td>
+          </tr>
+        </tr>
+      </tbody>
+    </table>
   </body>
 </html>

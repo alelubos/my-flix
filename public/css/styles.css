@@ -15,6 +15,12 @@ h1 {
   color: hsl(191, 90%, 86%);
 }
 
+td,
+th {
+  padding: 3px;
+  border: solid darkgrey 1px;
+}
+
 p {
   font-size: 1rem;
 }

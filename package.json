@@ -1,16 +1,18 @@
 {
   "name": "my-flix",
   "version": "1.0.0",
-  "description": "",
+  "description": "A Web API to browse movies, create a list of favorites and to-watch movies",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/alelubos/my-flix.git"
   },
-  "author": "",
+  "author": "Alejandro Lubos",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/alelubos/my-flix/issues"
@@ -19,6 +21,10 @@
   "dependencies": {
     "body-parser": "^1.20.0",
     "express": "^4.18.1",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
   }
 }
