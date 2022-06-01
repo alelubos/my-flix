@@ -1,101 +1,121 @@
-// Import modules
+// Imports & initializations
 const express = require('express'),
   morgan = require('morgan'),
   uuid = require('uuid'),
   bodyParser = require('body-parser');
 
 const app = express();
+const mongoose = require('mongoose');
+const Models = require('./models.js');
+
+const Movies = Models.Movie;
+const Users = Models.User;
+
+mongoose.connect('mongodb://localhost:27017/myFlixDB', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 // Hard-coded "in memory" array with 10 movies
 let topMovies = [
   {
     title: 'The Best of Enemies',
     description:
-      'American drama film directed and written by Robin Bissell in his feature debut. It is based on the book The Best of Enemies: Race and Redemption in the New South by Osha Gray Davidson, which focuses on the rivalry between civil rights activist Ann Atwater and Ku Klux Klan leader.',
+      'Inspired by true events. Civil rights activist Ann Atwater faces off against C.P. Ellis, Exalted Cyclops of the Ku Klux Klan, in 1971 Durham, North Carolina over the issue of school integration.',
     genre: 'Drama',
     imageURL: '',
-    year: 2019,
+    Released: 2019,
+    Rating: 7.4,
     director: 'Robin Bissel',
   },
   {
     title: 'The Name of the Rose',
     description:
-      'Historical mystery film directed by Jean-Jacques Annaud, based on the 1980 novel of the same name by Umberto Eco.',
+      'Historical mystery film directed by Jean-Jacques Annaud, based on the 1980 novel of the same name by Umberto Eco. An intellectually non-conformist friar investigates a series of mysterious deaths in an isolated abbey.',
     genre: 'Mystery',
     imageURL: '',
-    year: 1986,
+    released: 1986,
+    rating: 7.7,
     director: 'Jean-Jacques Annaud',
   },
   {
     title: 'The Lord of The Rings - The Fellowship of the Ring',
     description:
       "The Fellowship of the Ring is a 2001 epic fantasy adventure film directed by Peter Jackson, based on the first volume of J. R. R. Tolkien's The Lord of the Rings. The film is the first instalment in The Lord of the Rings trilogy",
-    genre: 'Epic Fantasy',
+    genre: 'Adventure',
     imageURL: '',
-    year: 2001,
+    released: 2001,
+    rating: 8.8,
     director: 'Peter Jackson',
   },
   {
     title: 'Dune',
     description:
-      'American epic science fiction film directed by Denis Villeneuve from a screenplay by Villeneuve, Jon Spaihts, and Eric Roth. It is the first of a two-part adaptation of the 1965 novel by Frank Herbert.',
-    genre: 'Science Fiction',
+      "Epic science fiction film. A noble family becomes embroiled in a war for control over the galaxy's most valuable asset while its heir becomes troubled by visions of a dark future.",
+    genre: 'Adventure',
     imageURL: '',
-    year: 2021,
+    released: 2021,
+    rating: 8.1,
     director: 'Denis Villeneuve',
   },
   {
     title: 'Arrival',
     description:
-      'American science fiction drama film directed by Denis Villeneuve and adapted by Eric Heisserer, who conceived the project as a spec script based on the 1998 short story "Story of Your Life" by Ted Chiang.',
-    genre: 'Science Fiction',
+      'A linguist works with the military to communicate with alien lifeforms after twelve mysterious spacecraft appear around the world.',
+    genre: 'Sci-Fi',
     imageURL: '',
-    year: 1998,
+    released: 2016,
+    rating: 7.9,
     director: 'Denis Villeneuve',
   },
   {
     title: 'Edge of Tomorrow',
     description:
-      'American science fiction action film starring Tom Cruise, Emily Blunt, Bill Paxton, and Brendan Gleeson. Directed by Doug Liman with a screenplay written by Christopher McQuarrie and the writing team of Jez and John-Henry Butterworth, its story is adapted from the 2004 Japanese light novel All You Need Is Kill by Hiroshi Sakurazaka.',
-    genre: 'Science Fiction',
+      'A soldier fighting aliens gets to relive the same day over and over again, the day restarting every time he dies.',
+    genre: 'Sci-Fi',
     imageURL: '',
-    year: 2014,
+    released: 2014,
+    rating: 7.9,
     director: 'Doug Liman',
   },
   {
     title: '12 Years a Slave',
     description:
-      'biographical drama film directed by Steve McQueen from a screenplay by John Ridley, based on the 1853 slave memoir Twelve Years a Slave by David Wilson, about a New York State-born free African-American man named Solomon Northup, who was kidnapped in Washington, D.C.',
+      'Biographical drama based on the 1853 slave memoir "Twelve Years a Slave" by David Wilson, about a New York State-born free African-American man named Solomon Northup, who was kidnapped in Washington, D.C.',
     genre: 'Drama',
     imageURL: '',
-    year: 2013,
+    released: 2013,
+    rating: 8.1,
     director: 'Steve McQueen',
   },
   {
     title: '300',
     description:
-      'Epic historical action film based on the 1998 comic series of the same name by Frank Miller and Lynn Varley. Both are fictionalized retellings of the Battle of Thermopylae in the Persian Wars.',
+      'Epic historical action film in which King Leonidas of Sparta and a force of 300 men fight the Persians at Thermopylae in 480 B.C.',
     genre: 'Action',
     imageURL: '',
-    year: 2006,
+    released: 2006,
+    rating: 7.6,
     director: 'Zack Snyder',
   },
   {
     title: 'Apocalypto',
     description:
-      'Epic historical adventure film produced, co-written, and directed by Mel Gibson. The film features a cast of Native American and Indigenous Mexican actors.',
-    genre: 'Adventure',
+      'As the Mayan kingdom faces its decline, a young man is taken on a perilous journey to a world ruled by fear and oppression.',
+    genre: 'Action',
     genre: '',
-    year: 2006,
+    released: 2006,
+    rating: 7.8,
     director: 'Mel Gibson',
   },
   {
     title: 'Bohemian Rapsody',
     description:
-      'Biographical musical drama film directed by Bryan Singer from a screenplay by Anthony McCarten, and produced by Graham King and Queen manager Jim Beach. The film tells the story of the life of Freddie Mercury, the lead singer of the British rock band Queen, from the formation of the band in 1970 up to their 1985 Live Aid performance at the original Wembley Stadium.',
-    genre: 'Musical',
+      'The story of the legendary British rock band Queen and lead singer Freddie Mercury, leading up to their famous performance at Live Aid (1985).',
+    genre: 'Drama',
     imageURL: '',
-    year: 2018,
+    released: 2018,
+    rating: 7.9,
     director: 'Bryan Singer',
   },
 ];
@@ -104,81 +124,228 @@ let topMovies = [
 app.use(morgan('common'));
 app.use(express.static('public'));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// ROUTING-----------------------------------------------------------------
+// ROUTING ENDPOINTS-------------------------------------------------------
 // Welcome message at root endpoint
 app.get('/', (req, res) => {
   res.send('Welcome to myFlix API!');
 });
 // Retrieve list of all movies
 app.get('/movies', (req, res) => {
-  res.status(201).json(topMovies);
+  Movies.find()
+    .then((movies) => {
+      res.status(201).json(movies);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 // Get info about movie by title
 app.get('/movies/:title', (req, res) => {
-  let movie = topMovies.find((movie) => movie.title === req.params.title);
-  if (movie) {
-    let { description, genre, director, imageURL } = movie;
-    res.status(201).json({ description, genre, director, imageURL });
-  } else {
-    res.status(404).send(`The movie ${req.params.title} was not found.`);
-  }
+  Movies.findOne({ title: req.params.title })
+    .then((movie) => {
+      console.log(req.params.title);
+      if (movie) {
+        res.status(201).json(movie);
+      } else {
+        res.status(404).send(`Movie "${req.params.title}" was not found...`);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send('Error: ' + error);
+    });
 });
 
 // Get data about single genre by name
 app.get('/genres/:name', (req, res) => {
-  res.send(`Here comes the description of the genre: ${req.params.name}`);
+  Movies.findOne({ 'genre.name': req.params.name })
+    .then((movie) => {
+      if (!movie) {
+        res
+          .status(404)
+          .send(
+            `We currently don't have any movie of "${req.params.name}" genre.`
+          );
+      } else {
+        res.status(200).json(movie.genre);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 // Get data about single director by name
 app.get('/directors/:name', (req, res) => {
-  res
-    .status(200)
-    .send(
-      `Here goes JSON object with data about "${req.params.name}" (Bio, yearOfBirth, yearOfDeath)`
-    );
+  Movies.findOne({ 'director.name': req.params.name })
+    .then((movie) => {
+      if (!movie) {
+        res
+          .status(404)
+          .send(
+            `We currently don't have any movie directed by "${req.params.name}".`
+          );
+      } else {
+        res.status(200).json(movie.director);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 // Register a new user
 app.post('/users', (req, res) => {
-  res
-    .status(200)
-    .send(
-      `New user "${req.body.username}" was succesfully registered. Congrats!`
-    );
+  Users.findOne({ username: req.body.username })
+    .then((user) => {
+      if (user) {
+        return res
+          .status(400)
+          .send(
+            `A user with the username: "${req.body.username}", already exists!`
+          );
+      } else {
+        Users.create({
+          username: req.body.username,
+          password: req.body.password,
+          email: req.body.email,
+          birthday: new Date(req.body.birthday),
+        })
+          .then((user) => {
+            res.status(201).json(user);
+          })
+          .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+          });
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 // De-register user from users
 app.delete('/users/:email', (req, res) => {
-  res
-    .status(200)
-    .send(`The Email "${req.params.email}" was succesfully de-registered.`);
+  Users.findOneAndDelete({ email: req.params.email })
+    .then((user) => {
+      if (!user) {
+        res
+          .status(400)
+          .send(`The user with email "${req.params.email}" was not found!`);
+      } else {
+        res
+          .status(200)
+          .send(
+            `The user with email "${req.params.email}" was succesfully de-registered.`
+          );
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 // Update info from a user
 app.put('/users/:username', (req, res) => {
-  res
-    .status(200)
-    .send(`User's "${req.params.username}" data was updated correctly.`);
+  Users.findOneAndUpdate(
+    { username: req.params.username },
+    {
+      $set: {
+        username: req.body.username,
+        password: req.body.password,
+        email: req.body.email,
+        birthday: req.body.birthday,
+      },
+    },
+    { new: true }
+  )
+    .then((updatedUser) => {
+      if (!updatedUser) {
+        res
+          .status(400)
+          .send(
+            `There's no registered user by the username "${req.params.username}".`
+          );
+      } else {
+        res.json(updatedUser);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 // Add movie to a user's favorites list
-app.post('/users/:username/favorites', (req, res) => {
-  res
-    .status(200)
-    .send(
-      `The title "${req.body.title}" was added to the favorites list from "${req.params.username}"`
-    );
+app.post('/users/:username/favorites/:movieID', (req, res) => {
+  Movies.findOne({ _id: req.params.movieID })
+    .then((movie) => {
+      if (!movie) {
+        res
+          .status(404)
+          .send(
+            `The movie with the ID "${req.params.movieID}" is not registered in the database.`
+          );
+      } else {
+        Users.findOneAndUpdate(
+          { username: req.params.username },
+          { $addToSet: { favoriteMovies: req.params.movieID } },
+          { new: true, fields: { username: 1, favoriteMovies: 1 } }
+        )
+          .then((user) => {
+            if (!user) {
+              res
+                .status(404)
+                .send(
+                  `The user with username "${req.params.username}" is not registered in the database.`
+                );
+            } else {
+              res.status(200).json(user);
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+          });
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 // Delete movie from a user's favorites list
-app.delete('/users/:username/favorites/:title', (req, res) => {
-  res
-    .status(200)
-    .send(
-      `The movie "${req.params.title}" was succesfully removed from the favorites list of "${req.params.username}"`
-    );
+app.delete('/users/:username/favorites/:movieID', (req, res) => {
+  Users.findOneAndUpdate(
+    { username: req.params.username },
+    { $pull: { favoriteMovies: req.params.movieID } },
+    { new: true, fields: { username: 1, favoriteMovies: 1 } }
+  )
+    .then((user) => {
+      if (!user) {
+        res
+          .status(404)
+          .send(
+            `The user with username "${req.params.username}" is not registered in the database.`
+          );
+      } else {
+        res.status(200).json(user);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 // ERROR HANDLING-----------------------------------------------------------

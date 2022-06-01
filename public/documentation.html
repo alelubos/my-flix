@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Roboto+Serif:opsz,wght@8..144,700&family=Roboto:wght@300;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Roboto+Serif:opsz,wght@8..144,700&family=Roboto:wght@400;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
@@ -17,7 +17,7 @@
     <h1>myFlix - API documentation</h1>
     <p>
       myFlix is all about the best movies of the millenium. Built with Node.js,
-      Express and MongoDB, it allows you to get a collection of favorite movies
+      Express and MongoDB, it allows you to get a collection of excellent movie
       titles. Movies can be searched by title and genre and you can access their
       director's Bio with curious facts. Users can sign-up and register their
       own account to create their personal list of 'favorites' and 'to-watch'
@@ -48,8 +48,14 @@
           <td>GET</td>
           <td>/movies/[title]</td>
           <td>
-            JSON object with data about single movie (description, genre,
-            director, imageURL)
+            JSON object with data about movie: 
+            { "genre": { "name": "drama", "description": "..."},
+            "director": { "name": "director's name",
+            "bio": "director's bio",
+            "birthYear": "1978",
+            "deathYear": ""}, 
+            "_id": "63834", "title": "Apocalypto", "description": "intense movie", 
+            "imageURL": "some-url-image.png", "rating": 7.5, "featured": false, "releaseYear": "2006")
           </td>
         </tr>
 
@@ -58,7 +64,9 @@
           <td>none</td>
           <td>GET</td>
           <td>/genres/[name]</td>
-          <td>Text with description about genre by name</td>
+          <td>JSON object with description about genre: 
+            { "name": "genre name", "description": "text describing genre"}
+          </td>
         </tr>
 
         <tr>
@@ -67,41 +75,51 @@
           <td>GET</td>
           <td>/directors/[name]</td>
           <td>
-            JSON object with data about a director (bio, yearOfBirth,
-            yearOfDeath)
+            JSON object with data about a director: 
+            { "name": "director's name",
+              "bio": "director's bio",
+              "birthYear": "1978",
+              "deathYear": ""}
           </td>
         </tr>
 
         <tr>
           <td>Register a new user</td>
-          <td>JSON object: { "username": "aleargento", "email": "mynombre@domain.com" } </td>
+          <td>JSON object: { "username": "user123", "password: "123abc", "email": "u123@domain.com" [, "birthday": "YYYY-MM-DD"] }</td>
           <td>POST</td>
           <td>/users</td>
           <td>Text confirming registration</td>
         </tr>
 
         <tr>
-          <td>Update information of single user</td>
-          <td>JSON object updated: { "username": "new_name", "email": "new_email@domain.com" }</td>
+          <td>Update information of single user by username</td>
+          <td>JSON object updated: { "username": "new_name", "password: "new_123", "email": "new_email@domain.com", "birthday": "2000-03-16" }</td>
           <td>PUT</td>
           <td>/users/[username]</td>
-          <td>Text message with data about single user (username)</td>
+          <td>JSON object with updated user data: 
+            {
+              "_id": "56473",
+              "username": "new_name",
+              "password": "new_123",
+              "email": "new_email@domain.com",
+              "birthday": "2000-03-16",
+              "favoriteMovies": [],
+              "__v": 0
+          }
+          </td>
         </tr>
 
         <tr>
           <td>Add movie to user's list of favorites movies</td>
-          <td>JSON object: {
-            "title": "Movie title",
-            "description": "description info",
-            "genre": "Crime",
-            "imageURL": "",
-            "year": "1999",
-            "director": "Director's name"
-        }</td>
+          <td>none</td>
           <td>POST</td>
-          <td>/users/[username]/favorites</td>
+          <td>/users/[username]/favorites/[movieID]</td>
           <td>
-            Text message confirming movie was added 
+            JSON object with username and updated favoriteMovies: { 
+              "_id": "users-id-code",
+              "username": "user1234", 
+              "favoriteMovies": [ "old-favorite-movieID", "added-movieID" ]
+            }  
           </td>
         
           <tr>
@@ -109,15 +127,19 @@
             <td>none</td>
             <td>DELETE</td>
             <td>/users/[username]/favorites/[title]</td>
-            <td>Text message confirming movie was removed</td>
+            <td>JSON object with username and updated favoriteMovies (passed movieID removed from the list): { 
+              "_id": "users-id-code",
+              "username": "user1234", 
+              "favoriteMovies": [ "movieId" ]
+            } </td>
           </tr>
 
           <tr>
             <td>De-register (delete) user by email</td>
             <td>none</td>
             <td>DELETE</td>
-            <td>/users/[username]</td>
-            <td>Text message confirming user email was removed</td>
+            <td>/users/[email]</td>
+            <td>Text message confirming user by email was removed</td>
           </tr>
         </tr>
       </tbody>
