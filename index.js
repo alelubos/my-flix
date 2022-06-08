@@ -3,12 +3,13 @@ const express = require('express'),
   morgan = require('morgan'),
   //  uuid = require('uuid'),
   bodyParser = require('body-parser'),
-  passport = require('passport');
+  passport = require('passport'),
+  cors = require('cors');
 
 const app = express();
+const { check, validationResult } = require('express-validator');
 const mongoose = require('mongoose');
 const Models = require('./models.js');
-
 const Movies = Models.Movie;
 const Users = Models.User;
 
@@ -122,6 +123,7 @@ let topMovies = [
 ];
 
 // MIDDLEWARE--------------------------------------------------------------
+app.use(cors());
 app.use(morgan('common'));
 app.use(express.static('public'));
 app.use(bodyParser.json());
@@ -224,7 +226,33 @@ app.get(
 app.post(
   '/users',
   passport.authenticate('jwt', { session: false }),
+  [
+    check(
+      'username',
+      'Username is required and must have at least 5 characters.'
+    ).isLength({ min: 5 }),
+    check(
+      'username',
+      'Username can only contain alphanumeric characters. Other symbols are not allowed.'
+    ).isAlphanumeric(),
+    check(
+      'password',
+      'Password is required and must have at least 6 characters'
+    ).isLength({ min: 6 }),
+    check('email', 'Email does not appear to be valid').isEmail(),
+    check(
+      'birthday',
+      'Birthday is required and must be a valid date.'
+    ).isDate(),
+  ],
   (req, res) => {
+    // check the validation object from express-validator for errors
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
+    let hashedPassword = Users.hashSync(req.body.password);
     Users.findOne({ username: req.body.username })
       .then((user) => {
         if (user) {
@@ -236,7 +264,7 @@ app.post(
         } else {
           Users.create({
             username: req.body.username,
-            password: req.body.password,
+            password: hashedPassword,
             email: req.body.email,
             birthday: new Date(req.body.birthday),
           })
@@ -285,14 +313,41 @@ app.delete(
 // Update info from a user
 app.put(
   '/users/:username',
+  [
+    check(
+      'username',
+      'Username is required and must have at least 5 characters.'
+    ).isLength({ min: 5 }),
+    check(
+      'username',
+      'Username can only contain alphanumeric characters. Other symbols are not allowed.'
+    ).isAlphanumeric(),
+    check(
+      'password',
+      'Password is required and must have at least 6 characters'
+    ).isLength({ min: 6 }),
+    check('email', 'Email does not appear to be valid').isEmail(),
+    check(
+      'birthday',
+      'Birthday is required and must be a valid date.'
+    ).isDate(),
+  ],
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
+    // check the validation object from express-validator for errors
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
+    let hashedPassword = Users.hashSync(req.body.password);
+
     Users.findOneAndUpdate(
       { username: req.params.username },
       {
         $set: {
           username: req.body.username,
-          password: req.body.password,
+          password: hashedPassword,
           email: req.body.email,
           birthday: req.body.birthday,
         },
