@@ -1,4 +1,5 @@
 // Imports & initializations
+const port = process.env.PORT || 8080;
 const express = require('express'),
   morgan = require('morgan'),
   //  uuid = require('uuid'),
@@ -450,6 +451,6 @@ app.use((err, req, res, next) => {
 });
 
 // listen for requests------------------------------------------------------
-app.listen(8080, () => {
-  console.log('myFlix is listening on port 8080...');
+app.listen(port, '0.0.0.0', () => {
+  console.log('Listening on port ' + port);
 });
