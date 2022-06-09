@@ -233,7 +233,7 @@ app.get(
 // Register a new user
 app.post(
   '/users',
-  passport.authenticate('jwt', { session: false }),
+  // passport.authenticate('jwt', { session: false }),
   [
     check(
       'username',
