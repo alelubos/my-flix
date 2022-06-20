@@ -148,7 +148,7 @@ app.get('/', (req, res) => {
 // Retrieve list of all movies
 app.get(
   '/movies',
-  passport.authenticate('jwt', { session: false }), //Only with JWTStrategy
+  // passport.authenticate('jwt', { session: false }), //Only with JWTStrategy
   (req, res) => {
     Movies.find()
       .then((movies) => {
