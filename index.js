@@ -148,7 +148,7 @@ app.get('/', (req, res) => {
 // Retrieve list of all movies
 app.get(
   '/movies',
-  // passport.authenticate('jwt', { session: false }), //Only with JWTStrategy
+  //passport.authenticate('jwt', { session: false }), //Only with JWTStrategy
   (req, res) => {
     Movies.find()
       .then((movies) => {
@@ -221,6 +221,30 @@ app.get(
             );
         } else {
           res.status(200).json(movie.director);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  }
+);
+
+// Get User
+app.get(
+  '/users/:username',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Users.findOne({ username: req.params.username })
+      .then((user) => {
+        if (!user) {
+          res
+            .status(404)
+            .send(
+              `We don't have registered a user with username: "${req.params.username}".`
+            );
+        } else {
+          res.status(200).json(user);
         }
       })
       .catch((err) => {
