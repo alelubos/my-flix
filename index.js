@@ -148,7 +148,7 @@ app.get('/', (req, res) => {
 // Retrieve list of all movies
 app.get(
   '/movies',
-  //passport.authenticate('jwt', { session: false }), //Only with JWTStrategy
+  passport.authenticate('jwt', { session: false }), //Only with JWTStrategy
   (req, res) => {
     Movies.find()
       .then((movies) => {
@@ -161,18 +161,20 @@ app.get(
   }
 );
 
-// Get info about movie by title
+// Get info about movie by movieID
 app.get(
-  '/movies/:title',
+  '/movies/:movieID',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    Movies.findOne({ title: req.params.title })
+    Movies.findOne({ _id: req.params.movieID })
       .then((movie) => {
-        console.log(req.params.title);
+        console.log(req.params.movieID);
         if (movie) {
           res.status(201).json(movie);
         } else {
-          res.status(404).send(`Movie "${req.params.title}" was not found...`);
+          res
+            .status(404)
+            .send(`Movie with ID: "${req.params.movieID}" was not found...`);
         }
       })
       .catch((err) => {
@@ -318,20 +320,20 @@ app.post(
 
 // Delete user
 app.delete(
-  '/users/:email',
+  '/users/:username',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    Users.findOneAndDelete({ email: req.params.email })
+    Users.findOneAndDelete({ username: req.params.username })
       .then((user) => {
         if (!user) {
           res
             .status(400)
-            .send(`The user with email "${req.params.email}" was not found!`);
+            .send(`The username: "${req.params.username}" was not found!`);
         } else {
           res
             .status(200)
             .send(
-              `The user with email "${req.params.email}" was succesfully de-registered.`
+              `The user with username: "${req.params.email}" was succesfully de-registered.`
             );
         }
       })
