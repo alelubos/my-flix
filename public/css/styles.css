@@ -1,24 +1,32 @@
 body {
-  background: hsl(210, 51%, 20%);
-  color: white;
+  background: whitesmoke;
+  color: black;
   width: 75vw;
   margin: auto;
   padding: 1.6rem;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-weight: 400;
 }
 
 h1 {
-  font-family: 'Roboto Serif', serif;
-  font-weight: 700;
-  font-size: 2.2rem;
-  color: hsl(191, 90%, 75%);
+  font-weight: 300;
+  font-size: 48px;
+  color: #0095dd;
 }
 
-td,
+thead {
+  text-align: left;
+  color: #0095dd;
+}
+
+td {
+  padding: 3px;
+  border-bottom: 1px solid #ccc;
+}
 th {
   padding: 3px;
-  border: solid darkgrey 1px;
+  border-bottom: 2px solid #ccc;
+  border-top: 2px solid #ccc;
 }
 
 p {

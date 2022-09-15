@@ -1,12 +1,13 @@
 {
   "name": "my-flix",
   "version": "1.0.0",
-  "description": "A Web API to browse movies, create a list of favorites and to-watch movies",
+  "description": "A Web API to browse movies and create a list of favorites movies",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "doc": "jsdoc -c jsdoc.json"
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,7 @@
     "passport-local": "^1.0.0"
   },
   "devDependencies": {
+    "jsdoc": "^3.6.11",
     "nodemon": "^2.0.16"
   }
 }

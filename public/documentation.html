@@ -5,31 +5,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>myFlix API</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto+Serif:opsz,wght@8..144,700&family=Roboto:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
   </head>
   <body>
-    <h1>myFlix - API documentation</h1>
-    <p>
-      myFlix is all about the best movies of the millenium. Built with Node.js,
-      Express and MongoDB, it allows you to get a collection of excellent movie
-      titles. Movies can be searched by title and genre and you can access their
-      director's Bio with curious facts. Users can sign-up and register their
-      own account to create their personal list of 'favorites' and 'to-watch'
-      movies.
-    </p>
+    <h1>myFlix -API documentation-</h1>
+    
     <table>
       <thead>
         <tr>
           <th>Request</th>
           <th>request body</th>
           <th>HTTP method</th>
-          <th>URL</th>
+          <th>URL Endpoint</th>
           <th>Response</th>
         </tr>
       </thead>
@@ -92,23 +82,14 @@
         </tr>
 
         <tr>
-          <td>Update information of single user by username</td>
-          <td>JSON object updated: { "username": "new_name", "password: "new_123", "email": "new_email@domain.com", "birthday": "2000-03-16" }</td>
-          <td>PUT</td>
-          <td>/users/[username]</td>
-          <td>JSON object with updated user data: 
-            {
-              "_id": "56473",
-              "username": "new_name",
-              "password": "new_123",
-              "email": "new_email@domain.com",
-              "birthday": "2000-03-16",
-              "favoriteMovies": [],
-              "__v": 0
-          }
-          </td>
+          <td>Login an already registered user</td>
+          <td>See auth.js for details</td>
+          <td>POST</td>
+          <td>/login</td>
+          <td>User JSON object with JWT Token.</td>
         </tr>
 
+        
         <tr>
           <td>Add movie to user's list of favorites movies</td>
           <td>none</td>
@@ -121,6 +102,24 @@
               "favoriteMovies": [ "movieID1", ..."movieIDN", "added-movieID" ]
             }  
           </td>
+
+          <tr>
+            <td>Update information of single user by username</td>
+            <td>JSON object updated: { "username": "new_name", "password: "new_123", "email": "new_email@domain.com", "birthday": "2000-03-16" }</td>
+            <td>PUT</td>
+            <td>/users/[username]</td>
+            <td>JSON object with updated user data: 
+              {
+                "_id": "56473",
+                "username": "new_name",
+                "password": "new_123",
+                "email": "new_email@domain.com",
+                "birthday": "2000-03-16",
+                "favoriteMovies": [],
+                "__v": 0
+            }
+            </td>
+          </tr>
         
           <tr>
             <td>Delete movie from user's list of favorites</td>
