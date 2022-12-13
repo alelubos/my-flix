@@ -1,6 +1,6 @@
 ## Welcome to myFlix Web Server
 
-**myFlix** is a backend web server, all about the best movies recommendations and built with:
+**myFlix** is a RESTful API built with:
 
 - **Node.js**: a performant JavaScript runtime in the backend;
 - **Express**: a backend framework for Node.js for building web applications and APIs;
@@ -8,15 +8,14 @@
 - **Mongoose**: an Object Data Modeling (ODM) library for MongoDB and Express;
 - **Passport.js**: an authentication middleware library for Node.js.
 
-**myFlix** serves a collection of Endpoints serving notorious hand-picked movie titles.
-Movies include their Genre information as well as their Director with their Bio and curious facts.
-Within the Apps consuming **myFlix Services**, users can sign-up and register their own account to create their personal list of 'favorite' movies.
+**myFlix** has several endpoints, serving data from hand-picked movie titles recommendations.
+Movies include information about their Genre, their Director -including a short Bio- and a synopsis. Users of the Front-end applications consuming **myFlix Services**, can sign-up to register their own account, Log in and create their personal list of 'favorite' movies.
 
-**myFlix** is currently consumed by two Movie Applications:
+**myFlix** is currently consumed by two Client-Side Applications, showcasing different techs stacks:
 
-- [TopFlix](https://alelubos.github.io/myFlix-Angular-client/welcome), a hosted Angular-based client App;
-- And **myFlix**, a react client App -to be hosted soon-.
+- #1 - [TopFlix Angular](https://github.com/alelubos/myFlix-Angular-client), a MEAN Full-Stack App;
+- #2 - [TopFlix React](https://github.com/alelubos/myFlix-client), a MERN Full-Stack App.
 
 ## API documentation
 
-Please refer to [API documentation](https://top-flix.herokuapp.com/documentation.html) to check the specifications and requirements to consume all of myFlix API Endpoints.
+Please refer to [API documentation](https://careful-teal-bighorn-sheep.cyclic.app/documentation.html) to check the specifications and requirements to consume myFlix API Endpoints and services.
